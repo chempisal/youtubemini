@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Pheasal Media & YouTube Pro</title>
+  
+  <!-- iOS PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Pheasal Pro">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="icons/favicon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f0f0f">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- iOS Add to Home Screen Banner Tip -->
+    <div id="iosInstallBanner" class="ios-install-banner">
+      <div class="banner-icon">📲</div>
+      <div class="banner-content">
+        <div class="banner-title">ដំឡើង Pheasal Pro លើ iPhone</div>
+        <div class="banner-desc">ចុចប៊ូតុង <strong>Share (⎋)</strong> លើ Safari > រួចជ្រើសយក <strong>"Add to Home Screen" (+)</strong></div>
+      </div>
+      <button class="banner-close" id="btnCloseBanner">&times;</button>
+    </div>
+
+    <!-- Main Tab Content Area -->
+    <main class="tab-content">
+
+      <!-- TAB 1: YOUTUBE MODE -->
+      <section id="tab-youtube" class="tab-pane active">
+        <!-- Floating YouTube Bar -->
+        <div class="yt-floating-bar">
+          <button id="btnYtBack" class="yt-btn" title="ថយក្រោយ">◀</button>
+          <button id="btnYtRefresh" class="yt-btn" title="ដំណើរការឡើងវិញ">↻</button>
+          
+          <input type="text" id="ytSearchInput" class="yt-url-input" placeholder="ស្វែងរក ឬបិទភ្ជាប់ Link YouTube...">
+          
+          <div id="adblockToggle" class="adblock-pill">
+            <span>🛡️</span>
+            <span id="adblockStatusText">គ្មាន Ads</span>
+          </div>
+
+          <button id="btnYtDownload" class="download-pill">
+            <span>⬇️</span>
+            <span>ទាញយក</span>
+          </button>
+        </div>
+
+        <!-- YouTube Video Frame -->
+        <div class="yt-frame-container">
+          <iframe 
+            id="ytPlayerFrame"
+            class="yt-iframe"
+            src="https://www.youtube-nocookie.com/embed/videoseries?list=PLr6-GrHGFly2iQ7fU1V92M0_n62pXnQ8o"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </section>
+
+      <!-- TAB 2: LOCAL VIDEO PLAYER -->
+      <section id="tab-video" class="tab-pane">
+        <div class="video-player-container">
+          <video id="mainVideoPlayer" class="video-element" controls playsinline></video>
+          <div id="videoPlaceholder" class="video-placeholder">
+            <span style="font-size: 40px;">🎬</span>
+            <span style="font-size: 13px;">សូមជ្រើសរើសមេរៀនខាងក្រោមដើម្បីចាក់</span>
+          </div>
+        </div>
+
+        <div class="media-section">
+          <div class="section-header">
+            <div class="section-title">🎥 វីដេអូមេរៀន (Educational Videos)</div>
+            <label class="btn-add-file">
+              <span>+ បន្ថែមវីដេអូ</span>
+              <input type="file" id="videoFileInput" class="file-input-hidden" accept="video/*">
+            </label>
+          </div>
+
+          <div id="videoListContainer" class="media-list">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: LOCAL AUDIO PLAYER -->
+      <section id="tab-audio" class="tab-pane">
+        <div class="audio-player-card">
+          <div class="audio-info-row">
+            <div id="audioArt" class="audio-art">🎵</div>
+            <div class="audio-meta">
+              <div id="audioTitle" class="audio-title">គ្មានសម្លេងកំពុងចាក់ទេ</div>
+              <div id="audioArtist" class="audio-artist">លោកគ្រូ ចែម ភាសាល (គ្រូកម្រិតឧត្តម)</div>
+            </div>
+          </div>
+
+          <div class="scrubber-container">
+            <input type="range" id="audioScrubber" class="scrubber-slider" min="0" max="100" value="0">
+            <div class="scrubber-time-row">
+              <span id="audioCurrentTime">00:00</span>
+              <span id="audioTotalTime">00:00</span>
+            </div>
+          </div>
+
+          <div class="audio-controls-row">
+            <button id="btnAudioPrev" class="control-btn" title="ថយក្រោយ">⏮</button>
+            <button id="btnAudioPlay" class="control-btn control-play-btn" title="ចាក់/ផ្អាក">▶</button>
+            <button id="btnAudioNext" class="control-btn" title="ទៅមុខ">⏭</button>
+          </div>
+        </div>
+
+        <div class="media-section">
+          <div class="section-header">
+            <div class="section-title">🎵 សម្លេងបង្រៀន MP3 (Lessons)</div>
+            <label class="btn-add-file">
+              <span>+ បន្ថែម MP3</span>
+              <input type="file" id="audioFileInput" class="file-input-hidden" accept="audio/*">
+            </label>
+          </div>
+
+          <div id="audioListContainer" class="media-list">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+        <audio id="mainAudioPlayer"></audio>
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-tab="tab-youtube" id="navBtnYouTube">
+        <span class="nav-icon">📺</span>
+        <span class="nav-label">YouTube</span>
+      </button>
+
+      <button class="nav-item" id="navBtnDownload">
+        <span class="nav-icon">⬇️</span>
+        <span class="nav-label">ទាញយក</span>
+      </button>
+
+      <button class="nav-item" data-tab="tab-video" id="navBtnVideo">
+        <span class="nav-icon">🎬</span>
+        <span class="nav-label">វីដេអូ</span>
+      </button>
+
+      <button class="nav-item" data-tab="tab-audio" id="navBtnAudio">
+        <span class="nav-icon">🎵</span>
+        <span class="nav-label">សម្លេង</span>
+      </button>
+
+      <button class="nav-item" id="navBtnAbout">
+        <span class="nav-icon">ℹ️</span>
+        <span class="nav-label">អំពីយើង</span>
+      </button>
+    </nav>
+
+    <!-- Modal: Downloader Options -->
+    <div id="modalDownloader" class="modal-overlay">
+      <div class="modal-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <h3 class="sheet-title">⬇️ ទាញយកវីដេអូ ឬសម្លេង</h3>
+          <button class="sheet-close" id="btnCloseDownloader">បិទ</button>
+        </div>
+
+        <p style="font-size: 12px; color: #888;">ជ្រើសរើសទម្រង់ដែលអ្នកចង់ទាញយកខាងក្រោម៖</p>
+
+        <a id="dlOptMP4" href="#" target="_blank" class="download-card">
+          <div class="download-card-icon" style="background: rgba(52, 152, 219, 0.2); color: #3498db;">🎬</div>
+          <div class="download-card-info">
+            <h4>ទាញយកជាវីដេអូ MP4 (HD)</h4>
+            <p>គុណភាពច្បាស់ 720p / 1080p</p>
+          </div>
+        </a>
+
+        <a id="dlOptMP3" href="#" target="_blank" class="download-card">
+          <div class="download-card-icon" style="background: rgba(243, 156, 18, 0.2); color: #f39c12;">🎵</div>
+          <div class="download-card-info">
+            <h4>ទាញយកជាសម្លេង MP3</h4>
+            <p>គុណភាពសម្លេងច្បាស់ High Quality Audio</p>
+          </div>
+        </a>
+
+        <a id="dlOptFast" href="#" target="_blank" class="download-card">
+          <div class="download-card-icon" style="background: rgba(46, 204, 113, 0.2); color: #2ecc71;">⚡</div>
+          <div class="download-card-info">
+            <h4>សេវាទាញយកលឿន (SaveFrom)</h4>
+            <p>ទាញយកដោយស្វ័យប្រវត្តតាមវេបសាយ</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Modal: About Creator -->
+    <div id="modalAbout" class="modal-overlay">
+      <div class="modal-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <h3 class="sheet-title">ℹ️ អំពីអ្នកបង្កើតកម្មវិធី</h3>
+          <button class="sheet-close" id="btnCloseAbout">បិទ</button>
+        </div>
+
+        <div class="author-box">
+          <div class="author-row">
+            <span class="label">🌟 កម្មវិធី៖</span>
+            <span class="val">Pheasal Media & YouTube Pro</span>
+          </div>
+          <div class="author-row">
+            <span class="label">👤 បង្កើតដោយ៖</span>
+            <span class="val">លោក ចែម ភាសាល</span>
+          </div>
+          <div class="author-row">
+            <span class="label">🎓 តួនាទី៖</span>
+            <span class="val">គ្រូកម្រិតឧត្តម</span>
+          </div>
+          <div class="author-row">
+            <span class="label">📞 ទំនាក់ទំនង៖</span>
+            <span class="val" style="color: #ff0033;">095 879 731</span>
+          </div>
+        </div>
+
+        <a href="tel:095879731" class="call-btn">
+          <span>📞</span>
+          <span>តេទៅលោកគ្រូ (095 879 731)</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast-notice"></div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
